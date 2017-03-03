@@ -92,10 +92,13 @@ ${helpers.predefined_type("background-color", "CSSColor",
 <%helpers:vector_longhand name="background-position-x" animatable="True"
                           spec="https://drafts.csswg.org/css-backgrounds-4/#propdef-background-position-x"
                           delegate_animate="True">
+    use context::QuirksMode;
     use std::fmt;
     use style_traits::ToCss;
     use values::HasViewportPercentage;
+    use values::specified::Length;
     use values::specified::position::HorizontalPosition;
+    use values::specified::{LengthOrPercentage, Percentage};
 
     #[allow(missing_docs)]
     pub mod computed_value {
@@ -126,7 +129,6 @@ ${helpers.predefined_type("background-color", "CSSColor",
     #[inline]
     #[allow(missing_docs)]
     pub fn get_initial_position_value() -> SpecifiedValue {
-        use values::specified::{LengthOrPercentage, Percentage};
         HorizontalPosition {
             keyword: None,
             position: Some(LengthOrPercentage::Percentage(Percentage(0.0))),
@@ -136,7 +138,19 @@ ${helpers.predefined_type("background-color", "CSSColor",
     #[allow(missing_docs)]
     pub fn parse(context: &ParserContext, input: &mut Parser)
                  -> Result<SpecifiedValue, ()> {
-        HorizontalPosition::parse(context, input)
+        let result = input.try(|input| HorizontalPosition::parse(context, input));
+        // If we're in quirksmode, try parsing just a number, as per:
+        // https://quirks.spec.whatwg.org/#the-unitless-length-quirk
+        if result.is_err() && context.quirks_mode == QuirksMode::Quirks {
+            let quirky_result = LengthOrPercentage::parse_numbers_are_pixels(input);
+            if quirky_result.is_ok() {
+                return Ok(HorizontalPosition {
+                    keyword: None,
+                    position: Some(quirky_result.unwrap()),
+                })
+            }
+        }
+        result
     }
 </%helpers:vector_longhand>
 

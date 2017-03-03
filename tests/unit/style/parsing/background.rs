@@ -128,3 +128,30 @@ fn background_shorthand_should_parse_origin_and_clip_correctly() {
     assert_eq!(result.background_origin, parse_longhand!(background_origin, "padding-box"));
     assert_eq!(result.background_clip, parse_longhand!(background_clip, "padding-box"));
 }
+
+mod quirks {
+    use super::*;
+
+    #[test]
+    fn background_position_quirky_length_without_quirksmode() {
+        let url = ServoUrl::parse("http://localhost").unwrap();
+        let context = ParserContext::new(Origin::Author, &url, Box::new(CSSErrorReporterTest));
+        let mut parser = Parser::new("7");
+
+        assert!(background_position_x::parse(&context, &mut parser).is_err());
+    }
+
+    #[test]
+    fn background_position_quirky_length_with_quirksmode() {
+        use style::context::QuirksMode;
+        let url = ServoUrl::parse("http://localhost").unwrap();
+        let mut context = ParserContext::new(Origin::Author, &url, Box::new(CSSErrorReporterTest));
+        context.quirks_mode = QuirksMode::Quirks;
+        let block_text = "7";
+        let mut parser = Parser::new(block_text);
+
+        let result = background_position_x::parse(&context, &mut parser);
+
+        assert_eq!(result.unwrap(), parse_longhand!(background_position_x, "7px"));
+    }
+}

@@ -6,6 +6,7 @@
 
 #![deny(missing_docs)]
 
+use context::QuirksMode;
 use cssparser::{Parser, SourcePosition, UnicodeRange};
 use error_reporting::ParseErrorReporter;
 #[cfg(feature = "gecko")]
@@ -52,6 +53,8 @@ pub struct ParserContext<'a> {
     pub base_url: &'a ServoUrl,
     /// An error reporter to report syntax errors.
     pub error_reporter: Box<ParseErrorReporter + Send>,
+    /// The quirksmode state to determine quirky parsing.
+    pub quirks_mode: QuirksMode,
     /// Implementation-dependent extra data.
     pub extra_data: ParserContextExtraData,
 }
@@ -67,6 +70,7 @@ impl<'a> ParserContext<'a> {
             stylesheet_origin: stylesheet_origin,
             base_url: base_url,
             error_reporter: error_reporter,
+            quirks_mode: QuirksMode::NoQuirks,
             extra_data: extra_data,
         }
     }
