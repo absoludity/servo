@@ -19,6 +19,7 @@ use servo_url::ServoUrl;
 use std::ascii::AsciiExt;
 use std::sync::Arc;
 use style::attr::AttrValue;
+use style::context::QuirksMode;
 use style::parser::ParserContextExtraData;
 use style::properties::{Importance, PropertyDeclarationBlock, PropertyId, LonghandId, ShorthandId};
 use style::properties::{parse_one_declaration, parse_style_attribute};
@@ -439,6 +440,7 @@ impl CSSStyleDeclarationMethods for CSSStyleDeclaration {
             *pdb = parse_style_attribute(&value,
                                          &self.owner.base_url(),
                                          window.css_error_reporter(),
+                                         QuirksMode::NoQuirks,
                                          ParserContextExtraData::default());
         });
 

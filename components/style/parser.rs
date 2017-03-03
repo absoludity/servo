@@ -64,13 +64,14 @@ impl<'a> ParserContext<'a> {
     pub fn new_with_extra_data(stylesheet_origin: Origin,
                                base_url: &'a ServoUrl,
                                error_reporter: Box<ParseErrorReporter + Send>,
+                               quirks_mode: QuirksMode,
                                extra_data: ParserContextExtraData)
                                -> ParserContext<'a> {
         ParserContext {
             stylesheet_origin: stylesheet_origin,
             base_url: base_url,
             error_reporter: error_reporter,
-            quirks_mode: QuirksMode::NoQuirks,
+            quirks_mode: quirks_mode,
             extra_data: extra_data,
         }
     }
@@ -81,7 +82,8 @@ impl<'a> ParserContext<'a> {
                error_reporter: Box<ParseErrorReporter + Send>)
                -> ParserContext<'a> {
         let extra_data = ParserContextExtraData::default();
-        Self::new_with_extra_data(stylesheet_origin, base_url, error_reporter, extra_data)
+        Self::new_with_extra_data(stylesheet_origin, base_url, error_reporter,
+                                  QuirksMode::NoQuirks, extra_data)
     }
 
     /// Create a parser context for on-the-fly parsing in CSSOM

@@ -346,6 +346,7 @@ impl CssRule {
         let context = ParserContext::new_with_extra_data(parent_stylesheet.origin,
                                                          &parent_stylesheet.base_url,
                                                          error_reporter.clone(),
+                                                         ::context::QuirksMode::NoQuirks,
                                                          extra_data);
         let mut input = Parser::new(css);
 
@@ -635,6 +636,7 @@ impl Stylesheet {
             context: ParserContext::new_with_extra_data(existing.origin,
                                                         &existing.base_url,
                                                         error_reporter,
+                                                        ::context::QuirksMode::NoQuirks,
                                                         extra_data),
             state: Cell::new(State::Start),
         };

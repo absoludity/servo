@@ -299,7 +299,8 @@ impl<'le> GeckoElement<'le> {
         // FIXME(heycam): Needs real ParserContextExtraData so that URLs parse
         // properly.
         let extra_data = ParserContextExtraData::default();
-        parse_style_attribute(value, &base_url, Box::new(StdoutErrorReporter), extra_data)
+        parse_style_attribute(value, &base_url, Box::new(StdoutErrorReporter),
+                              ::context::QuirksMode::NoQuirks, extra_data)
     }
 
     fn flags(&self) -> u32 {

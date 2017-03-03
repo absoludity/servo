@@ -331,7 +331,7 @@ impl PropertyDeclarationIdSet {
                     // properties, so whatever...
                     let context = ParserContext::new_with_extra_data(
                         ::stylesheets::Origin::Author, base_url, (*error_reporter).clone(),
-                        extra_data);
+                        ::context::QuirksMode::NoQuirks, extra_data);
                     Parser::new(&css).parse_entirely(|input| {
                         match from_shorthand {
                             None => {

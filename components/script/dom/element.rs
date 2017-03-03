@@ -2171,6 +2171,7 @@ impl VirtualMethods for Element {
                                 &attr.value(),
                                 &doc.base_url(),
                                 win.css_error_reporter(),
+                                doc.quirks_mode(),
                                 ParserContextExtraData::default())))
                         };
 

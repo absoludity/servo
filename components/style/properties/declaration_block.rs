@@ -536,9 +536,11 @@ pub fn append_serialization<'a, W, I, N>(dest: &mut W,
 pub fn parse_style_attribute(input: &str,
                              base_url: &ServoUrl,
                              error_reporter: StdBox<ParseErrorReporter + Send>,
+                             quirks_mode: ::context::QuirksMode,
                              extra_data: ParserContextExtraData)
                              -> PropertyDeclarationBlock {
-    let context = ParserContext::new_with_extra_data(Origin::Author, base_url, error_reporter, extra_data);
+    let context = ParserContext::new_with_extra_data(Origin::Author, base_url, error_reporter,
+                                                     quirks_mode, extra_data);
     parse_property_declaration_list(&context, &mut Parser::new(input))
 }
 
@@ -553,7 +555,8 @@ pub fn parse_one_declaration(id: PropertyId,
                              error_reporter: StdBox<ParseErrorReporter + Send>,
                              extra_data: ParserContextExtraData)
                              -> Result<Vec<(PropertyDeclaration, Importance)>, ()> {
-    let context = ParserContext::new_with_extra_data(Origin::Author, base_url, error_reporter, extra_data);
+    let context = ParserContext::new_with_extra_data(Origin::Author, base_url, error_reporter,
+                                                     ::context::QuirksMode::NoQuirks, extra_data);
     Parser::new(input).parse_entirely(|parser| {
         let mut results = vec![];
         match PropertyDeclaration::parse(id, &context, parser, &mut results, false) {

@@ -134,6 +134,7 @@ impl Keyframe {
         let context = ParserContext::new_with_extra_data(parent_stylesheet.origin,
                                                          &parent_stylesheet.base_url,
                                                          error_reporter,
+                                                         ::context::QuirksMode::NoQuirks,
                                                          extra_data);
         let mut input = Parser::new(css);
 
